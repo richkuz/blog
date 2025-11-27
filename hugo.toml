@@ -4,3 +4,11 @@ title = 'RichKuz Blog'
 
 theme = 'PaperMod'
 
+# config.toml
+[params]
+  disablePWA = true # Optional, but often helpful
+  
+[services]
+  [services.googleAnalytics]
+    disable = true
+
