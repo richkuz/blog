@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # These environment variables can be adjusted for your specific Hugo/Go version
-      HUGO_VERSION: 0.121.1 
+      HUGO_VERSION: 0.152.2
       GO_VERSION: 1.21.5
       DART_SASS_VERSION: 1.69.5 # Needed for SCSS/Sass support
     steps:
