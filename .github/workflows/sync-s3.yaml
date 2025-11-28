@@ -1,0 +1,95 @@
+# .github/workflows/sync-s3.yaml
+# 
+# This workflow syncs markdown blog posts from an S3 bucket to the content/posts/ directory.
+# It runs every 6 hours and can also be triggered manually.
+#
+# Required GitHub Secrets:
+#   - AWS_ACCESS_KEY_ID: AWS access key for IAM user with read-only access to S3
+#   - AWS_SECRET_ACCESS_KEY: AWS secret key for the IAM user
+#   - S3_BUCKET_NAME: Name of the S3 bucket containing blog posts
+#   - AWS_REGION: (Optional) AWS region, defaults to 'us-east-1' if not set
+#   - S3_BLOG_PREFIX: (Optional) S3 prefix/folder path, defaults to 'blog' if not set
+#
+name: Sync Blog Posts from S3
+
+# Controls when the workflow will run
+on:
+  # Run on a schedule (every 6 hours)
+  schedule:
+    - cron: '0 */6 * * *'  # Runs at minute 0 of every 6th hour
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions for the GITHUB_TOKEN to allow pushing changes
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION || 'us-east-1' }}
+
+      - name: Sync Markdown Files from S3
+        env:
+          S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
+          S3_PREFIX: ${{ secrets.S3_BLOG_PREFIX || 'blog' }}
+        run: |
+          # Create content/posts directory if it doesn't exist
+          mkdir -p content/posts
+          
+          # Sync markdown files from S3 to content/posts/
+          # --exclude "*" --include "*.md" ensures only markdown files are synced
+          # --delete removes local files that no longer exist in S3 (S3 is source of truth)
+          #   Remove --delete if you want to keep local files that aren't in S3
+          aws s3 sync "s3://${S3_BUCKET}/${S3_PREFIX}/" content/posts/ \
+            --exclude "*" \
+            --include "*.md" \
+            --delete \
+            --quiet
+
+      - name: Check for Changes
+        id: check-changes
+        run: |
+          # Check if there are any changes to commit
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes detected. Skipping commit."
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Changes detected. Preparing commit..."
+            git status --short
+          fi
+
+      - name: Commit and Push Changes
+        if: steps.check-changes.outputs.changed == 'true'
+        run: |
+          git add content/posts/
+          git commit -m "chore: sync blog posts from S3" || exit 0
+          git push origin main
+
+      - name: Summary
+        if: steps.check-changes.outputs.changed == 'true'
+        run: |
+          echo "✅ Successfully synced and committed changes from S3"
+          echo "The Hugo build workflow will be triggered automatically by the push event."
