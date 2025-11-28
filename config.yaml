@@ -1,0 +1,138 @@
+baseURL: https://www.richkuz.net/blog
+
+languageCode: en-us
+
+title: Rich's Blog
+
+copyright: © 2024-2025 Rich Kuzsma
+
+googleAnalytics:
+
+pagination:
+  pagerSize: 4
+  # Specify the number of posts listed at home page
+
+theme: minima
+# Specify a theme to use
+
+defaultContentLanguage: en
+# Specify the default language
+
+languages:
+# Override language-specific configurations
+  en:
+    languageName: EN
+    weight: 1    
+
+params:
+# Define regular configurations
+
+  greet: Welcome to Rich's Blog
+  
+  subtitle:
+  
+  switch: ["⏾", "⏾"]
+  
+  defaultTheme: system
+  # Specify the default color theme, available values: light, sand, rock, system.
+
+  displayDate: true
+
+  displayDescription: true
+
+  selectable: true
+
+  author:
+    name: Rich Kuzsma
+    status: Technical articles, blogmarks, and TILs
+    avatar: https://github.com/richkuz.png
+    description: |
+      Welcome to my technical blog! I've been a software engineer since the start of the web.
+
+  social:
+    - name: "linkedin"
+      url: "https://www.linkedin.com/in/rich-kuzsma/"
+    - name: "github"
+      url: "https://github.com/richkuz"
+    - name: "rss"
+      url: "index.xml"
+
+  math:
+    enable: true
+    provider: katex
+
+  diagram:
+    enable: true
+    provider: mermaid
+
+  comment:
+    enable: true
+    provider: giscus
+
+    giscus: 
+    # See also https://giscus.app
+      repo: richkuz/blog
+      repoId: R_kgDOQdy32g
+      category: Announcements
+      categoryId: DIC_kwDOQdy32s4CzIhW
+      mapping: pathname
+      inputPosition: buttom
+      reactions: true
+      metadata: false
+      lang: en
+
+  search:
+    enable: true
+    provider: fuse
+    title: Search
+    placeholder: Enter keywords
+
+    fuse:
+    # See also https://fusejs.io
+      keys:
+        - title
+        - permalink
+        - summary
+        - content
+      distance: 100
+      location: 0
+      threshold: 0.6
+      ignoreLocation: false
+      isCaseSensitive: false
+      includeScore: false
+      includeMatches: false
+      minMatchCharLength: 1
+      shouldSort: true
+      findAllMatches: false
+
+menu:
+  main:
+    - identifier: home
+      name: Home
+      weight: 1
+    - identifier: tags
+      name: Tags
+      weight: 2
+    - identifier: search
+      name: 🔍 search
+      weight: 3
+
+taxonomies:
+  category: categories
+  tag: tags
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+
+markup:
+# **DO NOT EDIT** anything below. 
+# Because unlike other Hugo themes, the way Minima uses to do syntax
+# highlighting depends strongly on configurations below, so that the
+# color theme of code blocks changes with the blog color theme, instead
+# of being static like you may have seen on other Hugo themes.
+  highlight:
+    lineNos: true
+    noClasses: false

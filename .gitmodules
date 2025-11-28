@@ -1,3 +1,6 @@
 [submodule "richkuz-blog/themes/PaperMod"]
 	path = richkuz-blog/themes/PaperMod
 	url = https://github.com/adityatelange/hugo-PaperMod.git
+[submodule "themes/minima"]
+	path = themes/minima
+	url = https://github.com/mivinci/hugo-theme-minima.git
