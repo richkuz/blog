@@ -12,7 +12,7 @@ But a week ago I learned about [Hckr.News](http://hcker.news/?smallweb=true), in
 
 **http://hcker.news/?smallweb=true**
 
-![[blog/Pasted image 20251129095135.png]]
+![[hckr-news.png]]
 
 It's easier to read HN through this curated site. You get a visual indicator of what the titles you've already scanned.
 
