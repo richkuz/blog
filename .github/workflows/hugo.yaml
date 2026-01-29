@@ -59,7 +59,7 @@ jobs:
 
       - name: Convert Obsidian WikiLinks to Markdown Links
         run: |
-          find content -name "*.md" -exec sed -i 's/!\[\[\(.*\)\]\]/![\1](\1)/g' {} +
+          find content -name "*.md" -exec sed -i 's/!\[\[\(.*\)\]\]/![\1](\/posts\/\1)/g' {} +
       
       # Run the build command
       - name: Build Site
