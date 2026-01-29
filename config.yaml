@@ -128,11 +128,21 @@ outputs:
     - JSON
 
 markup:
-# **DO NOT EDIT** anything below. 
-# Because unlike other Hugo themes, the way Minima uses to do syntax
-# highlighting depends strongly on configurations below, so that the
-# color theme of code blocks changes with the blog color theme, instead
-# of being static like you may have seen on other Hugo themes.
+  # Goldmark is Hugo's Markdown parser. 
+  # These settings ensure it processes your render hook correctly.
+  goldmark:
+    renderHooks:
+      image:
+        enableDefault: true
+    parser:
+      attribute:
+        block: true
+        title: true
+  # **DO NOT EDIT** anything below. 
+  # Because unlike other Hugo themes, the way Minima uses to do syntax
+  # highlighting depends strongly on configurations below, so that the
+  # color theme of code blocks changes with the blog color theme, instead
+  # of being static like you may have seen on other Hugo themes.
   highlight:
     lineNos: true
     noClasses: false
