@@ -57,6 +57,10 @@ jobs:
           hugo-version: ${{ env.HUGO_VERSION }}
           extended: true # Use the extended version of Hugo
 
+      - name: Convert Obsidian WikiLinks to Markdown Links
+        run: |
+          find content -name "*.md" -exec sed -i 's/!\[\[\(.*\)\]\]/![\1](\1)/g' {} +
+      
       # Run the build command
       - name: Build Site
         # The `--minify` flag compresses the output HTML/CSS/JS
