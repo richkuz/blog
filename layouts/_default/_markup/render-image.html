@@ -1,0 +1,36 @@
+{{- $src := .Destination -}}
+{{- $alt := .Text -}}
+{{- $caption := .Title -}}
+
+{{/* 1. Handle Obsidian WikiLink style ![[image.png]] */}}
+{{/* If the destination starts with '[[', strip the brackets */}}
+{{- if (findRE `^\[\[.*\]\]$` $src) -}}
+  {{- $src = strings.TrimLeft "[[" $src | strings.TrimRight "]]" -}}
+{{- end -}}
+
+{{/* 2. Look for the image as a Page Resource (Page Bundle) */}}
+{{- $img := .Page.Resources.GetMatch (printf "*%s*" $src) -}}
+
+{{/* 3. If not found in Page Bundle, check the Assets folder (Global) */}}
+{{- if not $img -}}
+  {{- $img = resources.Get $src -}}
+{{- end -}}
+
+<figure class="image-render-hook">
+  {{- if $img -}}
+    <img src="{{ $img.RelPermalink }}" 
+         alt="{{ $alt | default $src }}" 
+         {{ with $caption }} title="{{ . }}" {{ end }} 
+         loading="lazy">
+  {{- else -}}
+    {{/* 4. Fallback: If not found in resources, use the path as-is (for static folder) */}}
+    <img src="{{ $src | safeURL }}" 
+         alt="{{ $alt | default $src }}" 
+         {{ with $caption }} title="{{ . }}" {{ end }} 
+         loading="lazy">
+  {{- end -}}
+  
+  {{- if $caption -}}
+    <figcaption>{{ $caption }}</figcaption>
+  {{- end -}}
+</figure>
